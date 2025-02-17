@@ -1,0 +1,49 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Globe, Download, Search } from "lucide-react";
+
+export default function Home() {
+  const [language, setLanguage] = useState("en");
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  const resources = [
+    { title: "Visa-Free Countries", description: "Latest visa-free policies.", file: "visa-policies.pdf" },
+    { title: "Cultural Handbook", description: "Cross-border business guide.", file: "culture-guide.pdf" },
+  ];
+
+  return (
+    <div className="p-6 max-w-4xl mx-auto space-y-6">
+      <header className="flex justify-between items-center border-b pb-4">
+        <h1 className="text-xl font-bold">{language === "en" ? "Cross-Border Aviation Business" : "跨境航空商务"}</h1>
+        <Button onClick={() => setLanguage(language === "en" ? "zh" : "en")}>
+          <Globe className="w-5 h-5 mr-2" /> {language === "en" ? "中文" : "English"}
+        </Button>
+      </header>
+      
+      <div className="relative">
+        <Input 
+          placeholder={language === "en" ? "Search resources..." : "搜索资源..."} 
+          value={searchTerm} 
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <Search className="absolute right-3 top-2.5 w-5 h-5 text-gray-500" />
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {resources.filter(r => r.title.toLowerCase().includes(searchTerm.toLowerCase())).map((resource, index) => (
+          <Card key={index} className="p-4 flex justify-between items-center">
+            <CardContent>
+              <h2 className="text-lg font-semibold">{resource.title}</h2>
+              <p className="text-sm text-gray-500">{resource.description}</p>
+            </CardContent>
+            <Button variant="outline" className="ml-4">
+              <Download className="w-5 h-5 mr-2" /> {language === "en" ? "Download" : "下载"}
+            </Button>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
